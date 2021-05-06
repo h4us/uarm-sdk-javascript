@@ -27,7 +27,7 @@ class uArmSDK {
       this.onError = onError;
     }
     this.serialPort = new SerialCommunication({
-      path: port.comName,
+      path: port.path,
       baudRate: 115200,
       autoOpen,
       readyCode: `${MESSAGE_TICKING_FEEDBACK_PREFIX}${TICKING_UARM_READY}`,
@@ -291,10 +291,13 @@ class uArmSDK {
    */
   movePolar(stretch, rotation, height, speed) {
     return new Promise((resolve, reject) => {
-      const command = `G2201 S${stretch} R${rotation} H${height} F${speed || this.defaultSpeed}`;
+      const command = `G2201 S${stretch.toFixed(4)} R${rotation.toFixed(4)} H${height.toFixed(4)} F${speed || this.defaultSpeed}`;
       this.sendGCode(command, (error, data) => {
         if (error) {
           return reject(error);
+        }
+        if (!data.startsWith('ok')) {
+          return reject(`Didn't get "ok" as response, got ${data}`);
         }
         resolve(data);
       });
@@ -538,6 +541,49 @@ class uArmSDK {
       });
     });
   }
+
+  /**
+   * -
+   */
+  getPowerStatus() {
+    return new Promise((resolve, reject) => {
+      this.sendGCode('P2234', (error, data) => {
+        if (error) {
+          return reject(error);
+        }
+        if (!data.startsWith('ok')) {
+          return reject(`Didn't get "ok" as response, got ${data}`);
+        }
+        const regexp = new RegExp(/^ok\sV([0123]+)/);
+        const matches = regexp.exec(data);
+        if (!matches) {
+          return reject(`Unable to parse response: ${data}`);
+        }
+        resolve(matches[1]);
+      });
+    });
+  }
+
+
+  /**
+   * -
+   */
+  setMode(mode) {
+    return new Promise((resolve, reject) => {
+      this.sendGCode(`M2400 S${mode}`, (error, data) => {
+        if (error) {
+          return reject(error);
+        }
+
+        if (!data.startsWith('ok')) {
+          return reject(`Didn't get "ok" as response, got ${data}`);
+        }
+
+        resolve(mode);
+      });
+    });
+  }
+
 }
 
 module.exports = uArmSDK;

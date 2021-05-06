@@ -8,13 +8,13 @@ function findPort({ acceptFn }) {
     SerialPort.list().then((ports) => {
       const uarmPort = ports.find((port) => {
         if (acceptFn(port)) {
-          console.log(`💪  Found UARM serialport: ${port.comName}`);
+          console.log(`💪  Found UARM serialport: ${port.path}`);
           return port;
         }
       });
 
       if (!uarmPort) {
-        return reject(`😔  No Acceptable Port Found:\n${ports.map((port) => `${port.comName}\n`)}`);
+        return reject(`😔  No Acceptable Port Found:\n${ports.map((port) => `${port.path}\n`)}`);
       }
       resolve(uarmPort);
     }).catch(err => reject(err));

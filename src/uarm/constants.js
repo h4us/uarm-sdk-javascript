@@ -1,6 +1,6 @@
 // http://download.ufactory.cc/docs/en/uArm%20Swift%20Pro_Developer%20Guide%20v1.0.6.pdf
 module.exports = {
-  LOG_LEVEL: 1,
+  LOG_LEVEL: 100,
 
   // Types
   MESSAGE_GCODE_SEND_PREFIX: "#",
