@@ -1,6 +1,6 @@
 const EventEmitter = require('events');
-const SerialPort = require('serialport');
-const Readline = require('@serialport/parser-readline');
+const { SerialPort } = require('serialport');
+const { ReadlineParser } = require('@serialport/parser-readline');
 
 class SerialCommunication {
   constructor({ baudRate = 115200, path, readyCode, autoOpen = true }) {
@@ -9,13 +9,14 @@ class SerialCommunication {
 
     // https://serialport.io/docs/api-stream#constructor
     try {
-      this.serialport = new SerialPort(path, {
+      this.serialport = new SerialPort({
+        path,
         baudRate,
         autoOpen,
         openCallback: () => console.log('Open callback!'),
       });
 
-      const lineParser = this.serialport.pipe(new Readline());
+      const lineParser = this.serialport.pipe(new ReadlineParser());
       lineParser.on('data', (data) => {
         if (data === readyCode) {
           this.initialized = true;

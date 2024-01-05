@@ -1,4 +1,4 @@
-const SerialPort = require('serialport');
+const { SerialPort } = require('serialport');
 
 function findPort({ acceptFn }) {
   return new Promise((resolve, reject) => {
