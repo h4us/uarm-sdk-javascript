@@ -266,9 +266,9 @@ class uArmSDK {
    * @param {number} speed - Speed in mm/min
    * @returns {Promise} - A promise that will be resolved when uArm respond.
    */
-  move(x, y, z, speed) {
+  move(x, y, z, speed, lerp = false) {
     return new Promise((resolve, reject) => {
-      const command = `G0 X${x.toFixed(4)} Y${y.toFixed(4)} Z${z.toFixed(4)} F${speed || this.defaultSpeed}`;
+        const command = `G${lerp ? '01' : '00'} X${x.toFixed(4)} Y${y.toFixed(4)} Z${z.toFixed(4)} F${speed || this.defaultSpeed}`;
       this.sendGCode(command, (error, data) => {
         if (error) {
           return reject(error);

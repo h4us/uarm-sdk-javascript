@@ -1,13 +1,13 @@
 {
   "name": "uarm-sdk-javascript",
-  "version": "1.0.0",
+  "version": "1.0.0-dev",
   "description": "Javascript SDK to controlling your uArm Swift Pro.",
   "main": "index.js",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=15.0.0"
   },
   "dependencies": {
-    "serialport": "^9.0.7"
+    "serialport": "^12.0.0"
   },
   "devDependencies": {
     "eslint": "^6.5.1"
