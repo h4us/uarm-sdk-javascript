@@ -103,10 +103,18 @@ class uArmSDK {
         case MESSAGE_GCODE_RECEIVE_PREFIX: {
           const waiter = this.waitingResponses[messageId];
           if (!waiter) {
-            throw new Error(`Unable to find message id: ${messageId}`);
+            // TODO:
+            // throw new Error(`Unable to find message id: ${messageId}`);
+            Object.entries(this.waitingResponses, (el) => {
+              const [key, data] = el;
+              data.callback(new Error('Mismatch message id'), null);
+            });
+            this.waitingResponses = {};
+            // --
+          } else {
+            waiter.callback(null, rest);
+            this.waitingResponses[messageId] = null;
           }
-          waiter.callback(null, rest);
-          this.waitingResponses[messageId] = null;
           break;
         }
         default:
